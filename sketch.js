@@ -1,4 +1,8 @@
-let boatImage, group1Image, birdsImage;
+let boatImage;
+let group1Image; 
+let birdsImage;
+
+//set boat's size
 let boatScale = 0.7;
 
 //Perlin noise in mountain's movement
@@ -8,9 +12,15 @@ let mountainNoiseOffset = 0;
 let boatXOffset = 0; 
 let boatYOffset = 1000; 
 
-//Perlin noise in bird's horizontal and vertical movement
+//Perlin noise in bird flock's horizontal and vertical movement
 let birdXOffset = 0;
 let birdYOffset = 1000;
+
+//Perlin noise in dove's horizontal and vertical movement 
+//dove's size
+let doveXOffset;
+let doveYOffset;
+let doveScale;
 
 function preload() {
   boatImage = loadImage('assets/transparent_boat.png');
@@ -33,7 +43,13 @@ function setup() {
   birdXOffset = random(1000);  
   birdYOffset = random(2000, 3000);
 
-  loop(); // Change to loop to continuously animate
+//initialize the position and size of the dove
+  doveXOffset = -100;  
+  doveYOffset = -100; 
+  doveScale = 0.5; 
+
+//keep change to loop to continuously animate
+  loop(); 
 }
 
 //the entire canvas, including the background, mountains, water, boats and birds
@@ -43,7 +59,8 @@ function draw() {
   drawWaterSurface();
   drawBoat();
   drawBirds();
-  image(group1Image, 460, 300, 170, 150);
+  setDovePNG();
+  image(group1Image, width/2 + doveXOffset, height/2 + doveYOffset, 170 * doveScale, 150 * doveScale);
 }
 
 function windowResized() {
@@ -112,4 +129,13 @@ function drawBirds() {
   let birdY = noise(birdYOffset) * (height / 4); 
 
   image(birdsImage, birdX, birdY, 300, 150);
+}
+
+function setDovePNG() {
+  doveXOffset += random(-5, 5);  
+  doveYOffset += random(-1, 1); 
+  doveScale += random(-0.05, 0.05);  
+
+//make sure doveScale remains within appropriate bounds
+  doveScale = constrain(doveScale, 0.5, 1.5);
 }
