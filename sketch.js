@@ -8,10 +8,13 @@ let mountainNoiseOffset = 0;
 let boatXOffset = 0; 
 let boatYOffset = 1000; 
 
+//Perlin noise in bird's horizontal and vertical movement
+let birdXOffset = 0;
+let birdYOffset = 1000;
+
 function preload() {
   boatImage = loadImage('assets/transparent_boat.png');
-  group1Image = loadImage('assets/Group 1.png'); 
-  birdsImage = loadImage('assets/birds.png'); 
+  group1Image = loadImage('assets/dove.png'); 
 }
 
 //Set canvas size
@@ -21,8 +24,14 @@ function setup() {
 //initializa mountain noise offset
   mountainNoiseOffset = random(1000);
 
+//initializa boat noise offset
   boatXOffset = random(3000);
   boatYOffset = random(1000, 3000);
+
+//initializa bird's flock noise offset
+  birdsImage = loadImage('assets/birds.png');
+  birdXOffset = random(1000);  
+  birdYOffset = random(2000, 3000);
 
   loop(); // Change to loop to continuously animate
 }
@@ -33,10 +42,8 @@ function draw() {
   drawLayeredMountains();
   drawWaterSurface();
   drawBoat();
-  
-// Draw a Group 1 image on top of everything
+  drawBirds();
   image(group1Image, 460, 300, 170, 150);
-  image(birdsImage, 1000, 0, 300, 150);
 }
 
 function windowResized() {
@@ -94,4 +101,15 @@ function drawBoat() {
   tint(150, 150, 150, 150);
   image(boatImage, boatX, boatY, boatImage.width * boatScale, boatImage.height * boatScale);
   noTint();
+}
+
+function drawBirds() {
+  birdXOffset += 0.001; 
+  birdYOffset += 0.001; 
+
+//Perlin noise is used to calculate the current position of the bird's flock
+  let birdX = noise(birdXOffset) * width;
+  let birdY = noise(birdYOffset) * (height / 4); 
+
+  image(birdsImage, birdX, birdY, 300, 150);
 }
