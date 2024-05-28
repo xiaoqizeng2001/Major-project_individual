@@ -20,11 +20,14 @@ let birdYOffset = 1000;
 //dove's size
 let doveXOffset;
 let doveYOffset;
-let doveScale;
+let targetDoveXOffset;
+let targetDoveYOffset;
+let doveScale = 1;
 
 function preload() {
   boatImage = loadImage('assets/transparent_boat.png');
-  group1Image = loadImage('assets/dove.png'); 
+  group1Image = loadImage('assets/dove.png');
+  birdsImage = loadImage('assets/birds.png');
 }
 
 //Set canvas size
@@ -44,9 +47,8 @@ function setup() {
   birdYOffset = random(2000, 3000);
 
 //initialize the position and size of the dove
-  doveXOffset = -100;  
-  doveYOffset = -100; 
-  doveScale = 0.5; 
+doveXOffset = targetDoveXOffset = 0;
+doveYOffset = targetDoveYOffset = 0;
 
 //keep change to loop to continuously animate
   loop(); 
@@ -55,12 +57,23 @@ function setup() {
 //the entire canvas, including the background, mountains, water, boats and birds
 function draw() {
   background(230, 240, 240);
+  updateDovePosition();
   drawLayeredMountains();
   drawWaterSurface();
   drawBoat();
   drawBirds();
-  setDovePNG();
-  image(group1Image, width/2 + doveXOffset, height/2 + doveYOffset, 170 * doveScale, 150 * doveScale);
+
+  //draw dove
+  image(group1Image, width/2 + doveXOffset, height/2 + doveYOffset, 170 * doveScale, 150);
+}
+
+function updateDovePosition() {
+  if (frameCount % 60 === 0) {
+    targetDoveXOffset = random(-300, 300);
+    targetDoveYOffset = random(-100, 100);
+  }
+  doveXOffset = lerp(doveXOffset, targetDoveXOffset, 0.05);
+  doveYOffset = lerp(doveYOffset, targetDoveYOffset, 0.05);
 }
 
 function windowResized() {
@@ -129,13 +142,4 @@ function drawBirds() {
   let birdY = noise(birdYOffset) * (height / 4); 
 
   image(birdsImage, birdX, birdY, 300, 150);
-}
-
-function setDovePNG() {
-  doveXOffset += random(-5, 5);  
-  doveYOffset += random(-1, 1); 
-  doveScale += random(-0.05, 0.05);  
-
-//make sure doveScale remains within appropriate bounds
-  doveScale = constrain(doveScale, 0.5, 1.5);
 }
