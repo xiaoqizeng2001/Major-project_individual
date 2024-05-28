@@ -16,13 +16,9 @@ let boatYOffset = 1000;
 let birdXOffset = 0;
 let birdYOffset = 1000;
 
-//Perlin noise in dove's horizontal and vertical movement 
-//dove's size
-let doveXOffset;
-let doveYOffset;
-let targetDoveXOffset;
-let targetDoveYOffset;
-let doveScale = 1;
+// Dove's position and target position
+let doveX, doveY; 
+let targetDoveX, targetDoveY;
 
 function preload() {
   boatImage = loadImage('assets/transparent_boat.png');
@@ -42,13 +38,13 @@ function setup() {
   boatYOffset = random(1000, 3000);
 
 //initializa bird's flock noise offset
-  birdsImage = loadImage('assets/birds.png');
   birdXOffset = random(1000);  
   birdYOffset = random(2000, 3000);
 
-//initialize the position and size of the dove
-doveXOffset = targetDoveXOffset = 0;
-doveYOffset = targetDoveYOffset = 0;
+// Initialize the position of the dove in the center
+  doveX = targetDoveX = width / 2;
+  doveY = targetDoveY = height / 2;
+
 
 //keep change to loop to continuously animate
   loop(); 
@@ -57,23 +53,26 @@ doveYOffset = targetDoveYOffset = 0;
 //the entire canvas, including the background, mountains, water, boats and birds
 function draw() {
   background(230, 240, 240);
-  updateDovePosition();
+
+//let dove's position smoothly to the target
+  doveX = lerp(doveX, targetDoveX, 0.05);
+  doveY = lerp(doveY, targetDoveY, 0.05);
+
   drawLayeredMountains();
   drawWaterSurface();
   drawBoat();
   drawBirds();
 
-  //draw dove
-  image(group1Image, width/2 + doveXOffset, height/2 + doveYOffset, 170 * doveScale, 150);
+//draw the dove in the new position
+  image(group1Image, doveX - 85, doveY - 75, 170, 150); 
 }
 
-function updateDovePosition() {
-  if (frameCount % 60 === 0) {
-    targetDoveXOffset = random(-300, 300);
-    targetDoveYOffset = random(-100, 100);
-  }
-  doveXOffset = lerp(doveXOffset, targetDoveXOffset, 0.05);
-  doveYOffset = lerp(doveYOffset, targetDoveYOffset, 0.05);
+//make sure the mouse click is within the dove's image
+function mousePressed() {
+  let d = dist(mouseX, mouseY, doveX, doveY);
+  if (d < 85) 
+    targetDoveX = constrain(random(width), 0, width); 
+    targetDoveY = random(height / 2 - 100, height / 2 + 200);  
 }
 
 function windowResized() {
