@@ -1,6 +1,9 @@
 let boatImage, group1Image, birdsImage;
 let boatScale = 0.7;
 
+//Perlin noise in mountain's movement
+let mountainNoiseOffset = 0;
+
 //Perlin noise in boat's horizontal and vertical movement
 let boatXOffset = 0; 
 let boatYOffset = 1000; 
@@ -15,6 +18,9 @@ function preload() {
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
+//initializa mountain noise offset
+  mountainNoiseOffset = random(1000);
+
   boatXOffset = random(3000);
   boatYOffset = random(1000, 3000);
 
@@ -28,7 +34,7 @@ function draw() {
   drawWaterSurface();
   drawBoat();
   
-  // Draw a Group 1 image on top of everything
+// Draw a Group 1 image on top of everything
   image(group1Image, 460, 300, 170, 150);
   image(birdsImage, 1000, 0, 300, 150);
 }
@@ -43,7 +49,9 @@ function drawLayeredMountains() {
   let layers = 5;
   let maxHeight = height / 6;
   let noiseScale = 0.01;
-  // Each layer's color
+  mountainNoiseOffset += 0.002;
+
+// Each layer's color
   let colors = [
     color(50, 100, 100, 150), 
     color(70, 120, 120, 130),  
@@ -58,7 +66,8 @@ function drawLayeredMountains() {
     beginShape();
     vertex(0, height);
     for (let x = 0; x <= width; x += 20) {
-      let y = baseHeight - noise(x * noiseScale, i * 100) * maxHeight;
+      let noiseVal = noise(x * noiseScale, mountainNoiseOffset + i * 100);
+      let y = baseHeight - noiseVal * maxHeight;
       vertex(x, y);
     }
     vertex(width, height);
