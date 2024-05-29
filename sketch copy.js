@@ -12,7 +12,6 @@ class ResourceLoader {
     this.birdsImage = loadImage('assets/birds.png');
   }
 }
-
 //Manage canvas properties and resize, and let the canvas to fit the window
 class CanvasManager {
   constructor() {
@@ -21,13 +20,12 @@ class CanvasManager {
 
   windowResized() {
     resizeCanvas(windowWidth, windowHeight);
-    // Resize the canvas and redraw
+ //Resize the canvas and redraw
     redraw(); 
   }
 }
 
-
-//Class for background and layered mountains
+//Class the background and layered mountains
 class Background {
   constructor() {
     // Perlin noise in mountain's movement
@@ -79,11 +77,12 @@ class WaterSurface {
   }
 }
 
-// Draw the boat on the water surface
+//Draw the boat on the water surface
 class Boat {
   constructor(image, scale = 0.7) {
     this.image = image;
     this.scale = scale;
+
     //Perlin noise in boat's horizontal and vertical movement
     this.xOffset = random(3000);
     this.yOffset = random(1000, 3000);
@@ -107,6 +106,7 @@ class Overlay {
   constructor(group1Image, birdsImage) {
     this.group1Image = group1Image;
     this.birdsImage = birdsImage;
+
     //Perlin noise in bird flock's horizontal and vertical movement
     this.birdXOffset = random(1000);
     this.birdYOffset = random(2000, 3000);
@@ -145,7 +145,7 @@ class FilmEffect {
 
 let resourceLoader = new ResourceLoader();
 let canvasManager;
-let background1; 
+let background;
 let waterSurface;
 let boat;
 let overlay;
@@ -159,7 +159,7 @@ function preload() {
 
 function setup() {
   canvasManager = new CanvasManager();
-  background1 = new Background(); 
+  background = new Background();
   waterSurface = new WaterSurface();
   boat = new Boat(resourceLoader.boatImage);
   overlay = new Overlay(resourceLoader.group1Image, resourceLoader.birdsImage);
@@ -169,12 +169,12 @@ function setup() {
   doveX = targetDoveX = width / 2;
   doveY = targetDoveY = height / 2;
   
-  //Keep change to loop to continuously animate
+  //keep change to loop to continuously animate
   loop();
 }
 
 function draw() {
-  background1.draw(); 
+  background.draw();
 
   //Let dove's position smoothly approach the target
   doveX = lerp(doveX, targetDoveX, 0.05);
