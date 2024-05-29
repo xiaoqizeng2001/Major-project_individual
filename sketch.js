@@ -50,11 +50,11 @@ function setup() {
   loop(); 
 }
 
-//the entire canvas, including the background, mountains, water, boats and birds
+//the entire canvas, including the background, mountains, water, boats and birds and also film effect
 function draw() {
-  background(230, 240, 240);
+  background(230, 240, 240); 
 
-//let dove's position smoothly to the target
+//Let dove's position smoothly approach the target
   doveX = lerp(doveX, targetDoveX, 0.05);
   doveY = lerp(doveY, targetDoveY, 0.05);
 
@@ -63,9 +63,26 @@ function draw() {
   drawBoat();
   drawBirds();
 
-//draw the dove in the new position
-  image(group1Image, doveX - 85, doveY - 75, 170, 150); 
+//Draw the dove in the new position
+  image(group1Image, doveX - 85, doveY - 75, 170, 150);
+
+//add film grain and full-screen white flash
+  drawSnowOrFilmGrain();
 }
+
+function drawSnowOrFilmGrain() {
+  for (let i = 0; i < 50; i++) {
+    fill(255, 255, 255, random(250, 400)); 
+    noStroke();
+    ellipse(random(width), random(height), 4, 3);
+  }
+  
+  if (random(100) < 1) { 
+    fill(255, 255, 255, random(100, 300));
+    rect(0, 0, width, height);
+  }
+}
+
 
 //make sure the mouse click is within the dove's image
 function mousePressed() {
